@@ -21,6 +21,19 @@ paths:
 
 - Infer return types on custom hooks — don't annotate unless the type is complex or ambiguous
 - Separate `useState` per value — prefer individual calls over grouping into objects
+- Call store actions via the destructured selector, not `store.getState().setX()` — inside a component/hook, pull the action out (`const { setFoo } = useStore()`) and call `setFoo(...)`. Actions are stable, so this is safe and reads better.
+  - Exception: `store.getState()` is fine (and preferred) for reading **mutable state** inside async callbacks/event handlers, where a destructured value would be a stale closure. Only the setter calls should be destructured.
+
+```ts
+// avoid
+useChatStore.getState().setPendingExpandRecipeId(id)
+// prefer
+const { setPendingExpandRecipeId } = useChatStore()
+setPendingExpandRecipeId(id)
+
+// still correct — fresh read in an async handler
+const chatId = useChatStore.getState().chatId
+```
 
 ## JSX Patterns
 
