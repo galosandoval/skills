@@ -47,3 +47,9 @@ export function useTranslation<N extends Namespace>(namespace: N) {
 - Form libraries (react-hook-form, formik)
 - State management (zustand, jotai)
 - Any library where you want stricter types or simpler API
+
+## When Not to Encapsulate
+
+A thin pass-through — a wrapper whose body is one library call with no added type safety, simplification, or config centralization — doesn't earn a wrapper. Call the library directly at the call site instead. Forwarding arguments and return values 1:1 is indirection without benefit.
+
+**If unsure**: if the library were swapped out tomorrow, would call sites need to change anyway because they use library-specific types/options directly? If yes, wrap it. If the wrapper would just rename the library's function, don't.
