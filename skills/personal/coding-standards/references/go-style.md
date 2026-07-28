@@ -1,8 +1,3 @@
----
-paths:
-  - "**/*.go"
----
-
 # Go Style Guidelines
 
 ## File Size Guidelines

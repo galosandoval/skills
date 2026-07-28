@@ -1,8 +1,3 @@
----
-paths:
-  - "**/*.tsx"
----
-
 # React Preferences
 
 ## Props & Typing
@@ -41,6 +36,15 @@ const chatId = useChatStore.getState().chatId
 - Extract complex conditions into named variables (`const isVisible = x && y`)
 - No nested ternaries in JSX — use early returns or if/else instead
 - Self-close tags with no children (`<Component />`)
+
+## Mobile-First Layout
+
+These apps are used primarily on phones. Design and build every UI for a small touch screen first, then widen.
+
+- Unprefixed Tailwind classes = the phone layout. `sm:`/`md:`/`lg:` are additive overrides for bigger screens only — never write a desktop layout and shrink it down
+- Prefer thumb-reachable interactions (scroll, swipe, snap, bottom-anchored controls) over precise pointer ones. Tap targets ≥44px
+- Assume one column, no hover, and a soft keyboard eating half the viewport. Use `dvh`, not `vh`
+- When verifying a change in a browser or with Playwright, check a phone viewport first
 
 ## Organization
 

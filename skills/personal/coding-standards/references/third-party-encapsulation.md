@@ -1,8 +1,3 @@
----
-paths:
-  - "**/*.{ts,tsx}"
----
-
 # Third-Party Library Encapsulation
 
 ## Why Encapsulate

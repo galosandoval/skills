@@ -1,9 +1,3 @@
----
-paths:
-  - "prisma/**"
-  - "**/*.prisma"
----
-
 # Prisma Migrations
 
 ## Workflow

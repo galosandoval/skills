@@ -1,8 +1,3 @@
----
-paths:
-  - "**/*.{ts,tsx,js,jsx}"
----
-
 # Documentation Comments
 
 ## Prefer JSDoc/TSDoc over inline comments

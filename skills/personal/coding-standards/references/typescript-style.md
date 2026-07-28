@@ -1,8 +1,3 @@
----
-paths:
-  - "**/*.{ts,tsx}"
----
-
 # TypeScript & React Style Guidelines
 
 **Guiding principle:** When you look at any given piece of code, you should be able to tell what everything does. Names, structure, and size should make each part self-explanatory without hunting through the file or jumping elsewhere.
