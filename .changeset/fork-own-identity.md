@@ -10,6 +10,6 @@ Make this fork its own repository rather than a copy still wearing upstream's na
 
 **Renames.** `/ask-matt` is now `/ask-galo` and `/setup-matt-pocock-skills` is now `/setup-skills`, in the skill directory, frontmatter, heading, docs page, and every cross-reference. Anyone with the old skills installed should re-run `scripts/link-skills.sh` and drop the stale symlinks.
 
-**Docs are repo-only.** Upstream publishes these pages to `aihero.dev` and so mandates absolute links; this fork does not publish, so `.agents/writing-docs.md` and `CLAUDE.md` now require repo-relative links, and all 22 pages have been converted (a stale `to-prd` link in `research.md` now points at `to-spec`).
+**Docs are repo-only.** Upstream publishes these pages to `aihero.dev` and so mandates absolute links; this fork does not publish, so `.agents/writing-docs.md` and `CLAUDE.md` now require repo-relative links, and every docs page uses relative links (a stale `to-prd` link in `research.md` now points at `to-spec`).
 
 **Fork relationship recorded.** `CONTEXT.md` gains a section covering what the fork is, which remote is upstream, which skills were deliberately renamed, and how to resolve an upstream sync that touches a renamed directory — apply the change to the new path, never resurrect the old one.

@@ -1,0 +1,23 @@
+{
+  "name": "galosandoval",
+  "owner": {
+    "name": "Galo Sandoval",
+    "url": "https://github.com/galosandoval"
+  },
+  "description": "Galo Sandoval's skills for real engineering, as an installable Claude Code plugin.",
+  "plugins": [
+    {
+      "name": "galosandoval-skills",
+      "source": "./",
+      "description": "Galo Sandoval's agent skills for real engineering \u2014 grilling, spec/ticket flows, TDD, code review, domain modelling and more.",
+      "category": "engineering",
+      "keywords": [
+        "engineering",
+        "skills",
+        "tdd",
+        "code-review",
+        "grilling"
+      ]
+    }
+  ]
+}
