@@ -1,6 +1,21 @@
-# Matt Pocock Skills
+# Skills
 
-A collection of agent skills (slash commands and behaviors) loaded by Claude Code. Skills are organized into buckets and consumed by per-repo configuration emitted by `/setup-matt-pocock-skills`.
+A collection of agent skills (slash commands and behaviors) loaded by Claude Code. Skills are organized into buckets and consumed by per-repo configuration emitted by `/setup-skills`.
+
+## Fork relationship
+
+This repo is a fork of [mattpocock/skills](https://github.com/mattpocock/skills), tracked as the `upstream` remote (`origin` is `galosandoval/skills`). Most of `engineering/` and `productivity/` came from upstream and still take changes from it; `skills/personal/` is original to this fork.
+
+Two skills were **deliberately renamed** so the fork stops presenting as Matt's:
+
+| Upstream                  | Here           |
+| ------------------------- | -------------- |
+| `ask-matt`                | `ask-galo`     |
+| `setup-matt-pocock-skills` | `setup-skills` |
+
+The renames cost something on every sync. A `git merge upstream/main` that touches either directory conflicts as an add/add or a delete/modify, because upstream still has the old path. **Resolve it by applying the upstream change to the renamed directory and deleting the old path — never by resurrecting `ask-matt/` or `setup-matt-pocock-skills/`.** The same goes for their docs pages (`docs/engineering/ask-galo.md`, `docs/engineering/setup-skills.md`) and for any cross-reference upstream adds using the old slug; rewrite the slug as part of the resolution. This is accepted, ongoing cost — the alternative is a fork that permanently reads as someone else's.
+
+Docs pages under `docs/` are **repo-only** here. Upstream publishes them to `aihero.dev` and links absolutely; this fork does not publish, so its pages link relatively. An upstream sync that introduces an `https://aihero.dev/skills-<name>` link should be resolved to the relative equivalent (see [.agents/writing-docs.md](./.agents/writing-docs.md)).
 
 ## Language
 

@@ -1,6 +1,7 @@
 MIT License
 
 Copyright (c) 2026 Matt Pocock
+Copyright (c) 2026 Galo Sandoval
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +20,23 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+Provenance
+
+This repository is a fork of https://github.com/mattpocock/skills. Content
+that originated upstream — and any modification of it — remains the copyright
+of Matt Pocock, and the MIT terms above continue to bind it. Content that
+originated in this fork and has no counterpart upstream is the copyright of
+Galo Sandoval, licensed to you under those same MIT terms.
+
+If you are copying a file out of this repository and need to know whose notice
+to reproduce, ask git rather than guessing:
+
+    git log --diff-filter=A --format='%an %ad' -- <path>
+
+An "added" commit authored in this fork means the file is Galo Sandoval's; one
+reachable from the upstream history means it is Matt Pocock's. Either way the
+grant is the same MIT licence, so reproducing this file in full satisfies the
+notice requirement for any file in the repository.
