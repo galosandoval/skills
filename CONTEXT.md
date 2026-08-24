@@ -20,7 +20,7 @@ Docs pages under `docs/` are **repo-only** here. Upstream publishes them to `aih
 ## Language
 
 **Issue tracker**:
-The tool that hosts a repo's issues — GitHub Issues, Linear, a local `.scratch/` markdown convention, or similar. Skills like `to-tickets`, `to-spec`, and `triage` read from and write to it.
+The tool that hosts a repo's issues — GitHub Issues, Linear, a local `.scratch/` markdown convention, or similar. Skills like `to-tickets` and `triage` read from and write to it. `to-spec` does not — it writes a spec file into the repo, and publishing is `to-tickets`' job.
 _Avoid_: backlog manager, backlog backend, issue host
 
 **Issue**:

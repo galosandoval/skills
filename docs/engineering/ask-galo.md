@@ -32,7 +32,7 @@ You invoke this by typing `/ask-galo` — the agent won't reach for it on its ow
 
 The router names skills; it does not install them. Everything it points at has to be installed for the recommendation to be actionable, and it only knows the promoted skills in this repo.
 
-The tracker-dependent routes — triage, `to-spec`, `to-tickets`, `implement` — assume [setup-skills](./setup-skills.md) has already configured an issue tracker in the repo. The router will happily recommend them before that has happened.
+The tracker-dependent routes — triage, `to-tickets`, `implement` — assume [setup-skills](./setup-skills.md) has already configured an issue tracker in the repo. The router will happily recommend them before that has happened.
 
 ## Flows, not skills
 

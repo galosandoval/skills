@@ -14,7 +14,9 @@ The issue tracker and triage label vocabulary should have been provided to you â
 
 ### 1. Gather context
 
-Work from whatever is already in the conversation context. If the user passes a reference (a spec path, an issue number or URL) as an argument, fetch it and read its full body and comments.
+Work from whatever is already in the conversation context. If the user passes a reference as an argument, read it in full: a spec file written by `/to-spec` (`.scratch/<feature-slug>/spec.md` by default), or an issue number or URL, whose full body and comments you fetch.
+
+Specs are files, not issues â€” `/to-spec` never publishes. This skill is the only one that writes to the tracker.
 
 ### 2. Explore the codebase (optional)
 

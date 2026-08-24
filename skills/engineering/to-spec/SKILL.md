@@ -1,14 +1,16 @@
 ---
 name: to-spec
-description: Turn the current conversation into a spec and publish it to the project issue tracker — no interview, just synthesis of what you've already discussed.
+description: Turn the current conversation into a spec and write it to a markdown file in the repo — no interview, just synthesis of what you've already discussed.
 disable-model-invocation: true
 ---
 
 This skill takes the current conversation context and codebase understanding and produces a spec. Do NOT interview the user — just synthesize what you already know.
 
-The issue tracker and triage label vocabulary should have been provided to you — run `/setup-skills` if not.
+The spec is a **file in the repo**, not an issue. Publishing to the issue tracker is `/to-tickets`' job — this skill never creates, edits, or labels an issue.
 
 ## Process
+
+0. If the user passed an argument, read it before anything else. An issue number or URL (e.g. a cleared `/wayfinder` map) is **input** — fetch its body, comments and linked tickets. A markdown path is the **output location** — write the spec there instead of the default below.
 
 1. Explore the repo to understand the current state of the codebase, if you haven't already. Use the project's domain glossary vocabulary throughout the spec, and respect any ADRs in the area you're touching.
 
@@ -16,7 +18,9 @@ The issue tracker and triage label vocabulary should have been provided to you �
 
 Check with the user that these seams match their expectations.
 
-3. Write the spec using the template below, then publish it to the project issue tracker. Apply the `ready-for-agent` triage label - no need for additional triage.
+3. Write the spec using the template below to `.scratch/<feature-slug>/spec.md`, creating the directory if needed. `<feature-slug>` is a short kebab-case name for the feature — reuse the existing directory if the feature already has one.
+
+   Do NOT publish an issue, and do NOT apply triage labels — hand the file path back to the user so they can pass it to `/to-tickets`.
 
 <spec-template>
 

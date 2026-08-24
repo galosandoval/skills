@@ -12,7 +12,7 @@ npx skills update to-spec
 
 ## What it does
 
-`to-spec` turns the conversation you have just had into a **[spec](https://www.aihero.dev/ai-coding-dictionary/spec)**, and publishes it to your issue tracker as a single issue.
+`to-spec` turns the conversation you have just had into a **[spec](https://www.aihero.dev/ai-coding-dictionary/spec)**, and writes it to a markdown file in the repo — `.scratch/<feature-slug>/spec.md`, or a path you pass it.
 
 It does not interview you. By the time you reach for it the deciding is already done, so it synthesises what is known — from the thread, from the codebase, from your `CONTEXT.md` and ADRs — rather than opening a fresh round of questions. The spec is a record of decisions already made, not a place where new ones get made.
 
@@ -31,7 +31,7 @@ Reach for it when the build is too big for one agent [session](https://www.aiher
 
 ## Prerequisites
 
-`to-spec` publishes the spec as an issue, so [setup-skills](./setup-skills.md) must have configured a tracker and the triage-label vocabulary for this repo first. Either kind works: a real tracker like GitHub, or local markdown files under `.scratch/`, which is supported out of the box.
+None. `to-spec` writes a file into the repo, so it does not need a tracker configured. It sharpens the spec with your `CONTEXT.md` glossary and ADRs when they exist, and works without them. Publishing to a tracker is [to-tickets](./to-tickets.md)' job, and that one does need [setup-skills](./setup-skills.md) to have run.
 
 ## The spec is a decision record
 
@@ -50,8 +50,11 @@ Those agreed seams then travel. [tdd](./tdd.md) works only at pre-agreed seams, 
 **Where did `/to-prd` go?**
 It is this skill, renamed in v1.1. "Spec" is now the single through-line term, and the old `to-prd` slug is dead — reinstall under the new name. The pair that replaced the old vocabulary is *spec* and *tickets*: the spec is the destination and the decisions that fix it, the [tickets](https://www.aihero.dev/ai-coding-dictionary/ticket) are the execution steps that get there. If you pivot, delete the unfinished tickets and keep the spec.
 
-**Why does the spec get the `ready-for-agent` label? I don't want an agent implementing off it.**
-The label means "no further triage needed" — the document is complete enough for an agent to work from. It is an input designation, not a work order. But if you run [AFK](https://www.aihero.dev/ai-coding-dictionary/afk) agents that poll for `ready-for-agent`, that distinction isn't visible to them, and they will happily try to build the whole spec in one run instead of picking up the ticket slices. This is the most-reported rough edge on the skill. Until it changes, exclude the parent spec explicitly in your AFK agent's prompt, or strip the label once `/to-tickets` has run.
+**Why doesn't the spec go on my issue tracker any more?**
+Because a spec is a document, not a unit of work. As an issue it collected a `ready-for-agent` label it did not deserve, and [AFK](https://www.aihero.dev/ai-coding-dictionary/afk) agents polling that label would try to build the whole spec in one run instead of picking up the ticket slices. Publishing is now [to-tickets](./to-tickets.md)' job alone: `to-spec` writes the file, `to-tickets` turns it into issues that are actually grabbable. If you want the spec visible to collaborators, commit it or paste it into an issue yourself.
+
+**Where does the file land, and should I commit it?**
+`.scratch/<feature-slug>/spec.md` by default — the same directory [to-tickets](./to-tickets.md) uses for local tickets — or wherever you point it: `/to-spec docs/specs/billing.md`. Whether `.scratch/` is committed is your call; it is a throwaway artifact by design (see below), so most people gitignore it and commit only the specs they want reviewed.
 
 **Why not go straight from grilling to `/to-tickets` and skip the spec?**
 Often you should — the spec earns its step only on multi-session work. Where it pays is that the tickets are disposable and the spec isn't: each ticket is sized for one fresh context window and gets deleted or closed, while the spec stays as the one place the reasoning behind them lives. On a single-session change that buys you nothing, and you have paid an extra synthesis step where the [model](https://www.aihero.dev/ai-coding-dictionary/model) can drift. Go grilling → `/implement`.
@@ -71,12 +74,13 @@ Less well, and this is a known limitation. The template leans hard on user stori
 **Will it check the tracker for related work, or cite the ADRs it's respecting?**
 No to both. It reads and respects the ADRs covering the area it touches, but it doesn't link them, and it doesn't search the tracker for overlapping issues before drafting — so a spec can quietly duplicate work someone already filed. Search the tracker yourself first if the area is busy.
 
-**`/to-tickets` couldn't read my spec — it kept truncating.**
-Very large specs can outgrow what a tracker issue will serve back cleanly, and there is no local copy to fall back on. The fix is context hygiene: don't [clear](https://www.aihero.dev/ai-coding-dictionary/clearing) or [compact](https://www.aihero.dev/ai-coding-dictionary/compaction) between `/to-spec` and `/to-tickets`. Run them in the same window and the spec never has to be re-fetched at all.
+**Do I still have to run `/to-tickets` in the same context window?**
+It is no longer load-bearing. The spec is a file, so if you do [clear](https://www.aihero.dev/ai-coding-dictionary/clearing) or [compact](https://www.aihero.dev/ai-coding-dictionary/compaction), pass the path — `/to-tickets .scratch/<feature>/spec.md` — and it reads the whole thing off disk rather than fetching a truncated issue body back. Running both in one window is still the cheapest path when you have the room.
 
 ## It's working if
 
 - It starts writing rather than asking you a fresh round of questions.
+- It hands you back a file path, and creates no issues.
 - It puts the seams to you before it writes, and proposes as few as it can get away with.
 - It comes back in your project's nouns, not generic product-management boilerplate.
 - Every decision in it is one you can remember making. Nothing was invented to fill a section.
@@ -90,4 +94,4 @@ Very large specs can outgrow what a tracker issue will serve back cleanly, and t
 grill-with-docs → to-spec → to-tickets → implement → code-review
 ```
 
-Its neighbours upstream are [grill-with-docs](./grill-with-docs.md), which does the deciding this skill only records, and [wayfinder](./wayfinder.md), whose finished map merges onto the chain right here. Downstream, [to-tickets](./to-tickets.md) cuts the spec into tracer-bullet tickets for [implement](./implement.md) to build. When you're unsure which skill or flow fits, [ask-galo](./ask-galo.md) routes you.
+Its neighbours upstream are [grill-with-docs](./grill-with-docs.md), which does the deciding this skill only records, and [wayfinder](./wayfinder.md), whose finished map merges onto the chain right here. Downstream, [to-tickets](./to-tickets.md) reads the spec file, cuts it into tracer-bullet tickets and publishes those to the tracker for [implement](./implement.md) to build — the split is deliberate: this skill writes a document, `to-tickets` owns the tracker. When you're unsure which skill or flow fits, [ask-galo](./ask-galo.md) routes you.
