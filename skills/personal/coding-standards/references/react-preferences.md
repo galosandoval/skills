@@ -41,6 +41,7 @@ const chatId = useChatStore.getState().chatId
 
 These apps are used primarily on phones. Design and build every UI for a small touch screen first, then widen.
 
+- **First check `.claude/form-factor.md` in the project root.** If it exists, its declaration is the project's primary form factor and overrides this section. If it doesn't, the project is phone-first — the rules below apply as written.
 - Unprefixed Tailwind classes = the phone layout. `sm:`/`md:`/`lg:` are additive overrides for bigger screens only — never write a desktop layout and shrink it down
 - Prefer thumb-reachable interactions (scroll, swipe, snap, bottom-anchored controls) over precise pointer ones. Tap targets ≥44px
 - Assume one column, no hover, and a soft keyboard eating half the viewport. Use `dvh`, not `vh`
