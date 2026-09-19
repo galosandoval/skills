@@ -1,5 +1,36 @@
 # mattpocock-skills
 
+## 2.0.0
+
+### Major Changes
+
+- [#5](https://github.com/galosandoval/skills/pull/5) [`61c3967`](https://github.com/galosandoval/skills/commit/61c3967c13acc37eca5138e16d572c7c682f836a) Thanks [@galosandoval](https://github.com/galosandoval)! - Make this fork its own repository rather than a copy still wearing upstream's name.
+
+  **Licence.** `LICENSE` keeps the MIT grant and Matt Pocock's copyright, adds a copyright line for this fork's own contributions, and gains a provenance section naming the upstream repo and giving a `git log --diff-filter=A` recipe so anyone copying a file out can tell whose notice to reproduce instead of guessing.
+
+  **Identity.** The plugin is `galosandoval-skills`, the skills.sh badge and quickstart install `galosandoval/skills`, and every docs page's install line does the same. `README.md` credits the fork's origin in prose and stops claiming upstream's newsletter as its own.
+
+  **Renames.** `/ask-matt` is now `/ask-galo` and `/setup-matt-pocock-skills` is now `/setup-skills`, in the skill directory, frontmatter, heading, docs page, and every cross-reference. Anyone with the old skills installed should re-run `scripts/link-skills.sh` and drop the stale symlinks.
+
+  **Docs are repo-only.** Upstream publishes these pages to `aihero.dev` and so mandates absolute links; this fork does not publish, so `.agents/writing-docs.md` and `CLAUDE.md` now require repo-relative links, and every docs page uses relative links (a stale `to-prd` link in `research.md` now points at `to-spec`).
+
+  **Fork relationship recorded.** `CONTEXT.md` gains a section covering what the fork is, which remote is upstream, which skills were deliberately renamed, and how to resolve an upstream sync that touches a renamed directory — apply the change to the new path, never resurrect the old one.
+
+### Minor Changes
+
+- [#7](https://github.com/galosandoval/skills/pull/7) [`3bbb8fb`](https://github.com/galosandoval/skills/commit/3bbb8fbe6d2e765c66424e12d447b2249eb7fb8e) Thanks [@galosandoval](https://github.com/galosandoval)! - **`/implement` now has a commit discipline for unattended runs.** The skill previously ended on "Wait for the user to approve the work before committing" — correct with a human in the loop, and a work-destroying instruction without one. A harness that spawns `/implement` to run on its own has nobody to approve anything and no turn after the one the model stops on, so an agent that did the work, passed the gate, and then waited lost all of it.
+
+  - **Two contexts, stated.** Interactive runs keep approval-before-commit unchanged. A headless run commits the implementation the moment the full suite passes — before `/code-review`, before browser verification, before tidying — and everything after that becomes a second commit. The harness's prompt says which context is in force.
+  - **No more ending a turn on a wait.** A headless run is told explicitly that stopping ends the run and that uncommitted work is discarded, so "I'll pause here and wait for the background task" stops being a reachable way to finish.
+  - **Long-running commands have a procedure.** Pass an explicit timeout rather than letting the default background the command; never pipe a slow command through `tail`/`head`/`grep`, because the filter buffers and an empty output file makes a hang indistinguishable from progress; poll the file instead of burning turns on `true`, `echo` and `sleep`; and budget the command, killing it and finishing the run when the budget is spent.
+  - **A side effect on `/code-review`.** Reviewing before committing is why it reports seeing no changes — the diff it reads excludes the working tree. Headless runs no longer hit this, because the commit already happened.
+
+- [#5](https://github.com/galosandoval/skills/pull/5) [`f3a184c`](https://github.com/galosandoval/skills/commit/f3a184c567044c1e4360a43c177cce8be940abb4) Thanks [@galosandoval](https://github.com/galosandoval)! - **`/to-spec` writes a markdown file instead of publishing an issue.** The spec now lands at `.scratch/<feature-slug>/spec.md` (or a markdown path you pass it), and the skill never creates, edits, or labels an issue. Publishing to the issue tracker is `/to-tickets`' job alone.
+
+  - **No more `ready-for-agent` on the spec.** The label made AFK agents polling the tracker try to build the whole spec in one run instead of picking up the ticket slices. A spec is a document, not a unit of work.
+  - **No more truncated specs.** `/to-tickets` reads the spec off disk — pass the path — instead of fetching back a tracker issue body that could be served back incomplete. Running both in one context window is still the cheapest path, but it is no longer load-bearing.
+  - **`/to-spec` no longer needs `/setup-skills`.** It moves from hard dependency to soft: it still sharpens the spec with `CONTEXT.md` and ADRs when they exist, and works without a tracker configured. An issue number or URL passed as an argument (a cleared `/wayfinder` map, say) is still read as _input_.
+
 ## 1.2.3
 
 ### Patch Changes
