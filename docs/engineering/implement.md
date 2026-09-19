@@ -16,6 +16,8 @@ npx skills update implement
 
 It never reopens the plan. There is no interview, no clarifying round, no proposal of a different approach. Whatever was settled upstream is the input, and the skill's whole job is to turn that into a commit. That is what separates it from typing "build this" at a fresh [agent](https://www.aihero.dev/ai-coding-dictionary/agent), which will happily redesign the work while it builds it.
 
+Where the commit falls in the run depends on who is watching. With you in the loop it waits for your approval; running unattended under a [harness](https://www.aihero.dev/ai-coding-dictionary/harness) it commits as soon as the suite is green. See [Who is watching](#who-is-watching).
+
 ## When to reach for it
 
 You invoke this by typing `/implement` — the agent won't reach for it on its own. It ships with `disable-model-invocation: true`, so no other skill can call it either. Wherever [ask-galo](./ask-galo.md) or [to-tickets](./to-tickets.md) says "then `/implement` per ticket", that is an instruction to you, not something the agent will do unprompted.
@@ -50,6 +52,8 @@ A run is five beats, in order:
 4. Run the full test suite once, at the end.
 5. Run [code-review](./code-review.md), then commit to the current branch.
 
+Beat 5 inverts when nobody is watching — see [Who is watching](#who-is-watching).
+
 One run covers one ticket. The tickets [to-tickets](./to-tickets.md) produces are tracer-bullet vertical slices sized to fit a single fresh [context window](https://www.aihero.dev/ai-coding-dictionary/context-window), so the intended rhythm is: clear context, implement one ticket, commit, clear again. Each ticket is self-contained, which is what makes the previous ticket's context disposable.
 
 ## Pre-agreed seams
@@ -58,11 +62,28 @@ The idea the skill runs on is the **seam**: the public boundary you observe beha
 
 The word "pre-agreed" is doing real work, and it is also the skill's weakest joint. Nothing inside `implement` agrees the seams. `tdd` is the skill that asks, and it refuses to write a test at an unconfirmed seam. So in practice the agreement happens either upstream in the spec, or in the first exchange of the run. If it happens nowhere, the precondition never fires and the run quietly becomes "just write the code". Naming the seams in the spec is what stops that.
 
+## Who is watching
+
+The skill runs in two contexts, and the only thing that changes between them is when the commit happens.
+
+| Context | Commit discipline |
+| --- | --- |
+| **Interactive** — you are reading the output turn by turn | Wait for your approval before committing. The five beats run in order. |
+| **Headless** — a [harness](https://www.aihero.dev/ai-coding-dictionary/harness) spawned the run to finish on its own | Commit the moment the full suite passes. Review, verification and screenshots become a second commit on top. |
+
+The inversion is not a preference, it is the shape of the context. A headless run has no next turn: when the [model](https://www.aihero.dev/ai-coding-dictionary/model) stops, the run ends, and anything sitting uncommitted in the working tree goes in the bin along with it. So the skill tells a headless run never to end a turn waiting — not for a background task, not for a notification — and to commit early rather than at the end of a list of things that might not finish.
+
+The same reasoning covers slow commands, which is where a run usually stalls out. A browser suite or a dev server that outlives its timeout gets backgrounded, and piping it through `tail` buries the evidence: the output file stays empty, so a hang and steady progress look identical. Redirect to a file, poll the file, give it a budget, and kill it when the budget is spent. An unfinished verification is survivable; an uncommitted implementation is not.
+
 ## Common questions
 
 **It finished, but my ticket is still open and the acceptance criteria are still unchecked.**
 
 Correct, and expected. `implement` has no completion step. It ends at the commit and never touches the work item, confirmed on GitHub Issues and on the local markdown tracker, so it is not a tracker integration problem. It also does not act on the findings `code-review` produced, and does not tick the `- [ ]` boxes on the originating issue. Close the ticket and reconcile the criteria yourself. This bites hardest on a dependency chain, because `to-tickets` defines the frontier as tickets whose blockers are all closed. If nothing gets closed, nothing ever becomes visibly unblocked.
+
+**My automated run did the work, passed the gate, and committed nothing.**
+
+The run ended on a turn that said it was waiting for something — a background test run, a notification — and in a headless run there is no turn after that one. Everything uncommitted was discarded, and the harness reported a run with no commits. The fix is the ordering in [Who is watching](#who-is-watching): the implementation is committed on a green suite, before verification is even started, so a verification step that hangs costs the verification and nothing else. If your runs predate that rule, check the harness prompt actually tells the skill it is headless — without that it defaults to waiting for an approval nobody is there to give.
 
 **Can I point it at all my tickets at once, or run several in parallel?**
 
@@ -74,7 +95,7 @@ Not built in. It commits straight to the current branch, which several people fi
 
 **`code-review` says it cannot see my changes.**
 
-`code-review` reviews `git diff <fixed-point>...HEAD`, which excludes staged and working-tree changes. `implement` runs it before committing, so unless an interim commit already exists there is nothing in that diff to review. Multiple people have reported this and it is unfixed on both sides. Commit first, then review against the point you branched from.
+`code-review` reviews `git diff <fixed-point>...HEAD`, which excludes staged and working-tree changes. Interactively, `implement` runs it before committing, so unless an interim commit already exists there is nothing in that diff to review. Multiple people have reported this and it is unfixed on both sides. Commit first, then review against the point you branched from — which is exactly the order a headless run already uses, so the problem does not arise there.
 
 Separately, some people deliberately do not want the review inside the run at all, because an agent reviewing the code it just wrote is biased toward its own solution. Running [code-review](./code-review.md) in a fresh session against a fixed point is a legitimate alternative, and is the same reason that skill runs its two axes in separate sub-agents.
 
@@ -93,6 +114,7 @@ Probably the ticket is too big rather than the skill being misused. A run does c
 - Typechecks and single test files run repeatedly during the run, and the full suite runs once near the end.
 - The run reaches a commit on your current branch without you prompting it to carry on.
 - The diff is one ticket's worth of change: a vertical slice through every layer, not several tickets swept together.
+- In an unattended run, a commit lands right after the suite goes green — not at the very end of the trace, and never after a turn spent waiting on something.
 
 ## Where it fits
 
